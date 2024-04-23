@@ -10,6 +10,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
 
 import java.util.List;
 import java.util.Properties;
@@ -17,12 +18,11 @@ import java.util.stream.Collectors;
 
 @SpringBootApplication
 @Slf4j
-@EnableKafka
 public class OrderKafkaApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(OrderKafkaApplication.class, args);
-		//createTopics(propsOrder(), List.of("order", "analytics", "notification"));
+		createTopics(propsOrder(), List.of("notification-test"));
 
 	}
 

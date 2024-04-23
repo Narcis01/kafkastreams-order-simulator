@@ -26,6 +26,18 @@ public class AnalyticsTopology {
                 .toStream()
                 .print(Printed.<String, Long>toSysOut().withLabel("subscribe-count"));
 
+        streamsBuilder.stream("analytics",
+                Consumed.with(Serdes.Long(), SerdesFactory.analyticsSerdes())).toTable()
+                .filter((k,v) -> v.getSubscription().equals("NORMAL"),
+                        Materialized.as("value-normal"));
+
+        streamsBuilder.stream("analytics",
+                        Consumed.with(Serdes.Long(), SerdesFactory.analyticsSerdes())).toTable()
+                .filter((k,v) -> v.getSubscription().equals("PREMIUM"),
+                        Materialized.as("value-premium"));
+
+
+
 
         return streamsBuilder.build();
     }

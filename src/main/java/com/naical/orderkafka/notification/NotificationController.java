@@ -23,6 +23,6 @@ public class NotificationController {
 
     @GetMapping("/list")
     public ResponseEntity<Map<Long, Notification>> notificationList(){
-        return ResponseEntity.ok(notificationService.premiumCustomer());
+        return ResponseEntity.ok(notificationService.premiumCustomer("notification"));
     }
 }

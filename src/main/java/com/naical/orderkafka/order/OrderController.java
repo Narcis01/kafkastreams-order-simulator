@@ -35,9 +35,9 @@ public class OrderController {
     public ResponseEntity<?> producer(){
         List<Order> orderList = new ArrayList<>();
         for(int i = 0; i< 10; i++) {
-            User user = User.builder().id((long) i).firstName("firstName").lastName("lastName").subscription("PREMIUM").build();
-            Item item = Item.builder().id((long) i).name("Item").price(200.0).build();
-            Order order = Order.builder().id((long) i).address("Address").city("City").value(200.0).build();
+            User user = User.builder().id((long) i+100).firstName("firstName").lastName("lastName").subscription("PREMIUM").contactNumber("07contactme").build();
+            Item item = Item.builder().id((long) i+100).name("Item").price(1.0 + i).build();
+            Order order = Order.builder().id((long) i+100).address("Address").city("City-" + i).value(1000.0 + i).build();
             order.addItem(item);
             user.addOrder(order);
 

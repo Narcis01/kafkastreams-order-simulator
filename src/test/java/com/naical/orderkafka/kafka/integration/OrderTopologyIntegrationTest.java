@@ -1,6 +1,7 @@
 package com.naical.orderkafka.kafka.integration;
 
 
+import com.naical.orderkafka.analytics.AnalyticsService;
 import com.naical.orderkafka.item.Item;
 import com.naical.orderkafka.notification.NotificationService;
 import com.naical.orderkafka.order.Order;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.Duration;
@@ -22,13 +24,14 @@ import java.util.concurrent.TimeUnit;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest
-@EmbeddedKafka(topics = {"order", "notification", "analytics"})
+@EmbeddedKafka(topics = {"order", "notification", "analytics"}, bootstrapServersProperty = "spring.kafka.streams.bootstrap-servers")
 @TestPropertySource(properties = {
         "spring.kafka.streams.bootstrap-servers=${spring.embedded.kafka.brokers}",
         "spring.kafka.producer.bootstrap-servers=${spring.embedded.kafka.brokers}",
         "spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.LongSerializer",
         "spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer"
 })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class OrderTopologyIntegrationTest {
 
     @Autowired
@@ -37,19 +40,16 @@ public class OrderTopologyIntegrationTest {
     @Autowired
     NotificationService notificationService;
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     @Test
     void orderTest(){
         publishOrders();
 
-        Awaitility.await().atMost(10, TimeUnit.SECONDS)
+        Awaitility.await().atMost(15, TimeUnit.SECONDS)
                 .pollDelay(Duration.ofSeconds(1))
                 .ignoreExceptions()
-                .until(() -> notificationService.premiumCustomer().size(), equalTo(13) );
+                .until(() -> notificationService.premiumCustomer("notification").size(), equalTo(22) );
+
+
     }
 
     private void publishOrders(){

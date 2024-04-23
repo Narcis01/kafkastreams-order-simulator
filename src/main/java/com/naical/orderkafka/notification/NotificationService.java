@@ -17,16 +17,14 @@ public class NotificationService {
 
     private final KafkaStreams kafkaStreams;
 
-    private static final String STORE_NOTIFICATION = "notification";
-
     public NotificationService(@Qualifier("kafkaStreamsForConsumerNotification") KafkaStreams kafkaStreams) {
         this.kafkaStreams = kafkaStreams;
         this.kafkaStreams.start();
     }
 
-    public Map<Long, Notification> premiumCustomer(){
+    public Map<Long, Notification> premiumCustomer(String store){
         ReadOnlyKeyValueStore<Long, Notification> notification = kafkaStreams
-                .store(StoreQueryParameters.fromNameAndType(STORE_NOTIFICATION, QueryableStoreTypes.keyValueStore()));
+                .store(StoreQueryParameters.fromNameAndType(store, QueryableStoreTypes.keyValueStore()));
 
         Map<Long, Notification> notificationMap = new HashMap<>();
         notification.all().forEachRemaining(v -> notificationMap.put(v.key, v.value));

@@ -26,4 +26,14 @@ public class AnalyticsController {
     public ResponseEntity<?> subscribeCount(){
         return ResponseEntity.ok(analyticsService.subscribeCount());
     }
+
+    @GetMapping("/avgPremium")
+    public ResponseEntity<?> avgPremium(){
+        return ResponseEntity.ok(analyticsService.averageValuePremium());
+    }
+
+    @GetMapping("/avgNormal")
+    public ResponseEntity<?> avgNormal(){
+        return ResponseEntity.ok(analyticsService.averageValueNormal());
+    }
 }
